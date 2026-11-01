@@ -1,0 +1,32 @@
+[project]
+name = "drex-postgres"
+version = "0.3.0"
+description = "Drex for PostgreSQL: typed decisions about your rows from SQL, through PL/Python"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Nace AI", email = "engineering@nace.ai" }]
+requires-python = ">=3.10"
+# 0.6.2 is the first release on PyPI with client_info (X-Nace-Client); until 1.0 a minor version may change the API
+dependencies = ["nace-sdk>=0.6.2,<0.7"]
+
+[project.urls]
+Homepage = "https://console.nace.ai/docs"
+Source = "https://github.com/nace-ai/drex-postgres"
+
+[dependency-groups]
+dev = ["pytest>=8", "jsonschema>=4", "psycopg[binary]>=3.2"]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/drex_postgres"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["postgres: needs the Postgres test container (DREX_TEST_DSN)"]
+
+[tool.ruff]
+line-length = 120
