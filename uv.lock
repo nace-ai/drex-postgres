@@ -58,7 +58,7 @@ wheels = [
 
 [[package]]
 name = "drex-postgres"
-version = "0.3.0"
+version = "0.3.1"
 source = { editable = "." }
 dependencies = [
     { name = "nace-sdk" },

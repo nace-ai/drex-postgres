@@ -1,12 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.3.1 (2026-11-03)
+
+Fixes to installing either script. Nothing changes in what the functions send or return, apart from the version.
 
 - Both scripts install into a schema whose name needs quoting, such as `"ML Funcs"` or `"Analytics"`. They
   failed with `invalid name syntax` or `schema "analytics" does not exist`.
 - Installing `sql/drex_http.sql` into a second schema no longer breaks an install in the `http` extension's schema
   (such as `public`). It dropped that install's `_drex_settings()`, so every call to it failed with
   `function _drex_settings() does not exist`.
+- Requests identify themselves as `drex-postgres/0.3.1` and `drex-postgres-http/0.3.1` in `X-Nace-Client`.
 
 ## 0.3.0 (2026-11-01)
 

@@ -62,11 +62,11 @@ Clone this repository first; all paths below are relative to its root. The Pytho
 source, not PyPI. Use psql 15+ for the `\getenv` command below.
 
 ```sh
-git clone --branch v0.3.0 https://github.com/nace-ai/drex-postgres.git
+git clone --branch v0.3.1 https://github.com/nace-ai/drex-postgres.git
 cd drex-postgres
 ```
 
-`v0.3.0` is the latest release; [CHANGELOG.md](CHANGELOG.md) lists each release's changes. To upgrade, check out the
+`v0.3.1` is the latest release; [CHANGELOG.md](CHANGELOG.md) lists each release's changes. To upgrade, check out the
 new release, reinstall the package (PL/Python variant), and run the same script again: it replaces the functions and
 keeps `drex_settings` and your grants. Sessions opened afterwards use the new version.
 

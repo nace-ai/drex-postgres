@@ -56,7 +56,7 @@ REVOKE ALL ON drex_settings FROM PUBLIC;
 
 -- drex-postgres-http/<version>, sent as User-Agent and X-Nace-Client
 CREATE OR REPLACE FUNCTION _drex_client_name() RETURNS text
-LANGUAGE sql IMMUTABLE SET search_path FROM CURRENT AS $$ SELECT 'drex-postgres-http/0.3.0' $$;
+LANGUAGE sql IMMUTABLE SET search_path FROM CURRENT AS $$ SELECT 'drex-postgres-http/0.3.1' $$;
 
 --------------------------------------------------------------------------------------------------------------------
 -- Questions: the checks every function makes before it sends anything (drex_postgres/questions.py)

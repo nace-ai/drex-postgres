@@ -1,6 +1,6 @@
 [project]
 name = "drex-postgres"
-version = "0.3.0"
+version = "0.3.1"
 description = "Drex for PostgreSQL: typed decisions about your rows from SQL, through PL/Python"
 readme = "README.md"
 license = "MIT"
