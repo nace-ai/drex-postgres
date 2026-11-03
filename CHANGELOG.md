@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Both scripts install into a schema whose name needs quoting, such as `"ML Funcs"` or `"Analytics"`. They
+  failed with `invalid name syntax` or `schema "analytics" does not exist`.
+
 ## 0.3.0 (2026-11-01)
 
 The first public release.

@@ -379,6 +379,24 @@ def test_the_plpython_variant_installs_without_default_grants(installed: None) -
             conn.execute("DROP SCHEMA drex_granted CASCADE")
 
 
+@pytest.mark.parametrize("script", ["drex.sql", "drex_http.sql"])
+@pytest.mark.parametrize("schema", ["Drex Funcs", "DrexFuncs"])
+def test_either_variant_installs_into_a_schema_whose_name_needs_quoting(installed: None, script: str, schema: str) -> None:
+    quoted = psycopg.sql.Identifier(schema)
+    try:
+        with psycopg.connect(DSN, autocommit=True) as conn:
+            conn.execute(psycopg.sql.SQL("DROP SCHEMA IF EXISTS {0} CASCADE; CREATE SCHEMA {0}").format(quoted))
+            conn.execute(psycopg.sql.SQL("SET search_path = {}").format(quoted))
+            conn.execute((ROOT / "sql" / script).read_text())
+            if script == "drex_http.sql":
+                conn.execute("INSERT INTO drex_settings (api_key, base_url) VALUES (%s, %s)", [MOCK_KEY, f"{INSIDE}/ns/quoted/ok"])
+            assert conn.execute(psycopg.sql.SQL("SELECT {}.drex_noul('x', 'Refund?')").format(quoted)).fetchone()[0] == 0.75
+    finally:
+        # A new connection: a failed install leaves its own in an aborted transaction
+        with psycopg.connect(DSN, autocommit=True) as conn:
+            conn.execute(psycopg.sql.SQL("DROP SCHEMA IF EXISTS {} CASCADE").format(quoted))
+
+
 def test_a_cleartext_base_url_is_refused(db: Variant) -> None:
     db.use(base_url="http://drex.example.com")
     with pytest.raises(errors.InvalidAuthorizationSpecification, match="must be an https:// URL"):
