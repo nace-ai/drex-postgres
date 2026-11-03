@@ -341,8 +341,9 @@ $$;
 --------------------------------------------------------------------------------------------------------------------
 
 -- The key and base URL. A custom base URL receives the key and the rows, so it must be HTTPS, except on this machine.
--- On OpenRouter the key is openrouter_api_key when set, else api_key, and a nace_ key is refused
-DROP FUNCTION IF EXISTS _drex_settings();
+-- On OpenRouter the key is openrouter_api_key when set, else api_key, and a nace_ key is refused.
+-- The drop names this schema: unqualified, it would find another install's in the http extension's schema
+DO $$ BEGIN EXECUTE format('DROP FUNCTION IF EXISTS %I._drex_settings()', current_schema()); END $$;
 CREATE FUNCTION _drex_settings(OUT api_key text, OUT base_url text, OUT open_router boolean,
                                OUT referer text, OUT title text)
 LANGUAGE plpgsql STABLE SET search_path FROM CURRENT AS $$

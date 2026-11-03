@@ -4,6 +4,9 @@
 
 - Both scripts install into a schema whose name needs quoting, such as `"ML Funcs"` or `"Analytics"`. They
   failed with `invalid name syntax` or `schema "analytics" does not exist`.
+- Installing `sql/drex_http.sql` into a second schema no longer breaks an install in the `http` extension's schema
+  (such as `public`). It dropped that install's `_drex_settings()`, so every call to it failed with
+  `function _drex_settings() does not exist`.
 
 ## 0.3.0 (2026-11-01)
 
