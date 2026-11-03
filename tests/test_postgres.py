@@ -397,6 +397,27 @@ def test_either_variant_installs_into_a_schema_whose_name_needs_quoting(installe
             conn.execute(psycopg.sql.SQL("DROP SCHEMA IF EXISTS {} CASCADE").format(quoted))
 
 
+def test_an_http_install_into_another_schema_leaves_the_first_working() -> None:
+    """The first install shares its schema with the http extension, as when both are in public, so that schema is on
+    the second install's search_path. In a database of its own, since http can't move schemas."""
+    script = (ROOT / "sql" / "drex_http.sql").read_text()
+    with psycopg.connect(DSN, autocommit=True) as conn:
+        conn.execute("DROP DATABASE IF EXISTS drex_two_installs WITH (FORCE)")
+        conn.execute("CREATE DATABASE drex_two_installs")
+    try:
+        with psycopg.connect(psycopg.conninfo.make_conninfo(DSN, dbname="drex_two_installs"), autocommit=True) as conn:
+            conn.execute("CREATE SCHEMA drex_first; CREATE SCHEMA drex_second; CREATE EXTENSION http SCHEMA drex_first")
+            conn.execute("SET search_path = drex_first")
+            conn.execute(script)
+            conn.execute("INSERT INTO drex_settings (api_key, base_url) VALUES (%s, %s)", [MOCK_KEY, f"{INSIDE}/ns/first/ok"])
+            conn.execute("SET search_path = drex_second")
+            conn.execute(script)
+            assert conn.execute("SELECT drex_first.drex_noul('x', 'Refund?')").fetchone()[0] == 0.75
+    finally:
+        with psycopg.connect(DSN, autocommit=True) as conn:
+            conn.execute("DROP DATABASE drex_two_installs WITH (FORCE)")
+
+
 def test_a_cleartext_base_url_is_refused(db: Variant) -> None:
     db.use(base_url="http://drex.example.com")
     with pytest.raises(errors.InvalidAuthorizationSpecification, match="must be an https:// URL"):
