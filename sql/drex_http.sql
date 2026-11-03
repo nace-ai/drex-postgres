@@ -36,7 +36,7 @@ BEGIN
     EXECUTE format('SELECT count(*) FROM %I.http_list_curlopt()', http_schema);
     -- What exists before this install, so the end of the script can tell what it created
     PERFORM set_config('drex.install_existing', coalesce((SELECT string_agg(p.oid::text, ',') FROM pg_proc p
-                                                          WHERE p.pronamespace = current_schema()::regnamespace), ''), true);
+                                                          WHERE p.pronamespace = quote_ident(current_schema())::regnamespace), ''), true);
     PERFORM set_config('drex.install_new_table', (to_regclass(format('%I.drex_settings', current_schema())) IS NULL)::text, true);
     PERFORM set_config('search_path', format('%I, %I, pg_temp', current_schema(), http_schema), true);
 END
@@ -797,7 +797,7 @@ BEGIN
     FOR granted IN
         SELECT DISTINCT format('FUNCTION %s', p.oid::regprocedure) AS object, a.grantee::regrole::text AS grantee
         FROM pg_proc p, aclexplode(p.proacl) a
-        WHERE p.pronamespace = current_schema()::regnamespace AND p.proname ~ '^_?drex_'
+        WHERE p.pronamespace = quote_ident(current_schema())::regnamespace AND p.proname ~ '^_?drex_'
           AND p.oid <> ALL (coalesce(existing, '{}')) AND a.grantee NOT IN (0, p.proowner)
         UNION
         SELECT DISTINCT format('TABLE %s', c.oid::regclass), a.grantee::regrole::text

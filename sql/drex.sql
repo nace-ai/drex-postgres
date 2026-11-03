@@ -21,7 +21,7 @@ $$ LANGUAGE plpython3u;
 DO $$
 BEGIN
     PERFORM set_config('drex.install_existing', coalesce((SELECT string_agg(p.oid::text, ',') FROM pg_proc p
-                                                          WHERE p.pronamespace = current_schema()::regnamespace), ''), true);
+                                                          WHERE p.pronamespace = quote_ident(current_schema())::regnamespace), ''), true);
 END
 $$;
 
@@ -105,7 +105,7 @@ BEGIN
     FOR granted IN
         SELECT DISTINCT p.oid::regprocedure::text AS object, a.grantee::regrole::text AS grantee
         FROM pg_proc p, aclexplode(p.proacl) a
-        WHERE p.pronamespace = current_schema()::regnamespace AND p.proname LIKE 'drex\_%'
+        WHERE p.pronamespace = quote_ident(current_schema())::regnamespace AND p.proname LIKE 'drex\_%'
           AND p.oid <> ALL (coalesce(existing, '{}')) AND a.grantee NOT IN (0, p.proowner)
     LOOP
         EXECUTE format('REVOKE ALL ON FUNCTION %s FROM %s', granted.object, granted.grantee);
