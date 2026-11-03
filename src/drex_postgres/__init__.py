@@ -1,3 +1,3 @@
 """Drex for PostgreSQL: the PL/Python functions' implementation."""
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
