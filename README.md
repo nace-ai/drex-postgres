@@ -15,6 +15,8 @@ Ask typed questions about your rows directly from SQL. These functions connect [
 [Drex](https://console.nace.ai/docs), Nace's decision models, to classify text, score rows and return calibrated
 probabilities as SQL values.
 
+**Also from Drex:** [Drex Browser Use](https://github.com/nace-ai/drex-browser-harness-pub), an AI browser agent and MCP server. One sentence fills a DoorDash cart in 16 moves.
+
 [Which variant](#which-variant) · [Install](#install) · [Examples](#examples) · [API reference](docs/API.md) ·
 [Development](#development)
 
